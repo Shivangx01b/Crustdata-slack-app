@@ -288,17 +288,21 @@ async def slack_events(request: Request):
 
 @app.post("/slack/command")
 async def slack_command(request: Request):
-    data = await request.form()
-    command = data.get("command")
-    text = data.get("text")
-    user_id = data.get("user_id")
-    channel_id = data.get("channel_id")
+    try:
+        data = await request.form()
+        print(f"Data {data}")
+        command = data.get("command")
+        text = data.get("text")
+        user_id = data.get("user_id")
+        channel_id = data.get("channel_id")
 
-    if command == "/info":
-        response = generate_response(text)
-        try:
-            client.chat_postEphemeral(channel=channel_id, user=user_id, text=response)
-        except SlackApiError as e:
-            print(f"Error posting ephemeral message: {e.response['error']}")
-
-    return JSONResponse(content={"response_type": "ephemeral", "text": "Command received!"})
+        if command == "/info":
+            response = generate_response(text)
+            try:
+                client.chat_postEphemeral(channel=channel_id, user=user_id, text=response)
+            except SlackApiError as e:
+                print(f"Error posting ephemeral message: {e.response['error']}")
+        return JSONResponse(content={"status": "ok"})
+    except Exception as e:
+        print(f"An error occurred: {e}")
+        return JSONResponse(content={"status": "error", "message": str(e)}, status_code=500)

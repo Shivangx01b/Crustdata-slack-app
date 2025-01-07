@@ -11,4 +11,4 @@ faiss-cpu
 slack_sdk
 uvicorn==0.20.0
 fastapi
-
+python-multipart
