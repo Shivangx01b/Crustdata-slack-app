@@ -1,3 +1,9 @@
+<h1 align="center">
+  <br>
+  <a href=""><img src="https://github.com/Shivangx01b/Crustdata-slack-app/blob/main/static/this.PNG" alt="" width="2000px;"></a>
+  <br>
+  <a href="https://twitter.com/intent/follow?screen_name=shivangx01b"><img src="https://img.shields.io/twitter/follow/shivangx01b?style=flat-square"></a>
+</h1>
 
 # Crustdata Build Challenge: Level 3 (Slack Integration)
 
