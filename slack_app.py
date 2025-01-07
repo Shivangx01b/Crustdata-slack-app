@@ -259,7 +259,9 @@ def validate_curl(curl_data, curl_response, max_iterations=3):
         print(e)
         return f"Failed to validate curl request due to error: {e}"
 
-
+@app.get("/health")
+async def health():
+    return {"status": "ok"}
 
 @app.post("/slack/events")
 async def slack_events(request: Request):
