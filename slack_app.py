@@ -151,8 +151,10 @@ def generate_response(prompt):
                         #if "Failed to Validate curl request due to error" not in validated_curl:
                         validated_curl = curl_raw
                         print(f"[~] Final Correct curl is : {validated_curl}")
-                        final_response = final_bot_answer(validated_curl, res["answer"])
+                        #final_response = final_bot_answer(validated_curl, res["answer"])
+                        final_response = res["answer"]
                         return final_response
+
                         #else:
                         #   print(validated_curl)
                     else:
