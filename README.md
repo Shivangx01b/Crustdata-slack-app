@@ -1,6 +1,8 @@
 
 # Crustdata Build Challenge: Level 3 (Slack Integration)
 
+# Slack Backend: https://crustdata-slack-app.onrender.com
+
 ## Overview
 
 This stage of the challenge involves integrating the chatbot with Slack to function as a Slack bot. The bot will:
@@ -138,7 +140,7 @@ retrieval_chain = create_retrieval_chain(
 3. **Connect to Slack**:
    - Configure the Slack app in your workspace.
    - Set the event subscription URL to point to `/slack/events`.
-   - Set the command for /info and /join at slack slash command
+   - Set the command for /info and /jointhis at slack slash command
 
 
 
