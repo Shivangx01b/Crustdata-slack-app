@@ -149,4 +149,9 @@ retrieval_chain = create_retrieval_chain(
    - Set the command for /info and /jointhis at slack slash command
 
 
+## Ways to improve the code
 
+- Make a better curl validator, cuz current one does not work properly some time , looks like custom tools issue
+- Add another agent after Curl to Python to validate the code before run
+- Cache the llm response for faster processing
+- Move to a better vectordb like Chromadb
