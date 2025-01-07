@@ -146,15 +146,15 @@ def generate_response(prompt):
                     print(f"[~] Curl 2 Python: {curl_to_python}")
                     request_response = executor_agent(curl_to_python)
                     if "Failed to execute curl request as python code with error as" not in request_response:
-                        print(f"[~] Request Response is : {request_response}")
-                        validated_curl = validate_curl(curl_data=curl_raw, curl_response=request_response)
-                        if "Failed to Validate curl request due to error" not in validated_curl:
-                        
-                            print(f"[~] Final Correct curl is : {validated_curl}")
-                            final_response = final_bot_answer(validated_curl, res["answer"])
-                            return final_response
-                        else:
-                            print(validated_curl)
+                        #print(f"[~] Request Response is : {request_response}")
+                        #validated_curl = validate_curl(curl_data=curl_raw, curl_response=request_response)
+                        #if "Failed to Validate curl request due to error" not in validated_curl:
+                        validated_curl = curl_raw
+                        print(f"[~] Final Correct curl is : {validated_curl}")
+                        final_response = final_bot_answer(validated_curl, res["answer"])
+                        return final_response
+                        #else:
+                        #    print(validated_curl)
                     else:
                         print(request_response)
                 else:
@@ -306,7 +306,12 @@ async def slack_command(request: Request, background_tasks: BackgroundTasks):
     if command == "/info":
         
         background_tasks.add_task(handle_info_command, channel_id, user_id, text)
-        return JSONResponse(content={"response_type": "ephemeral", "text": "Processing your request..."})
+        return JSONResponse(
+            content={
+                "response_type": "ephemeral",
+                "text": "Processing your request..."
+            }
+        )
 
 async def handle_join_channel(channel_id: str, user_id: str):
     try:
