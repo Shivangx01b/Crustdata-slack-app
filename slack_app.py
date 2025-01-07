@@ -133,7 +133,7 @@ def final_bot_answer(curl_validated, original_response):
 def generate_response(prompt):
     try:
         res = retrieval_chain.invoke({
-            "input": prompt + ". Give example of curl request in your response if possible, Make sure you only provide curl request if it exists; don't make anything of your own. "
+            "input": prompt + ".  If Possible please add curl request also for all the apis that you give in your response, Make sure you only provide curl request if it exists; don't make anything of your own."
         })
         response = res["answer"]
         if "curl" in response:
