@@ -2,7 +2,7 @@ import os
 import json
 from slack_sdk import WebClient
 from slack_sdk.errors import SlackApiError
-from fastapi import FastAPI, Request, HTTPException
+from fastapi import FastAPI, Request, HTTPException, BackgroundTasks
 from fastapi.responses import JSONResponse
 from fastapi.middleware.cors import CORSMiddleware
 import os
@@ -287,22 +287,56 @@ async def slack_events(request: Request):
     return JSONResponse(content={"status": "ok"})
 
 @app.post("/slack/command")
-async def slack_command(request: Request):
-    try:
-        data = await request.form()
-        print(f"Data {data}")
-        command = data.get("command")
-        text = data.get("text")
-        user_id = data.get("user_id")
-        channel_id = data.get("channel_id")
+async def slack_command(request: Request, background_tasks: BackgroundTasks):
+    data = await request.form()
+    command = data.get("command")
+    text = data.get("text")
+    user_id = data.get("user_id")
+    channel_id = data.get("channel_id")
 
-        if command == "/info":
-            response = generate_response(text)
-            try:
-                client.chat_postEphemeral(channel=channel_id, user=user_id, text=response)
-            except SlackApiError as e:
-                print(f"Error posting ephemeral message: {e.response['error']}")
-        return JSONResponse(content={"status": "ok"})
-    except Exception as e:
-        print(f"An error occurred: {e}")
-        return JSONResponse(content={"status": "error", "message": str(e)}, status_code=500)
+    if command == "/jointhis":
+        background_tasks.add_task(handle_join_channel, channel_id, user_id)
+        return JSONResponse(
+            content={
+                "response_type": "ephemeral",
+                "text": "Attempting to join the channel... Please wait."
+            }
+        )
+
+    if command == "/info":
+        
+        background_tasks.add_task(handle_info_command, channel_id, user_id, text)
+        return JSONResponse(content={"response_type": "ephemeral", "text": "Processing your request..."})
+
+async def handle_join_channel(channel_id: str, user_id: str):
+    try:
+       
+        client.conversations_join(channel=channel_id)
+        print(f"Bot successfully joined the channel: {channel_id}")
+
+       
+        client.chat_postEphemeral(
+            channel=channel_id,
+            user=user_id,
+            text=f"The bot has successfully joined this channel."
+        )
+
+       
+        client.chat_postEphemeral(
+            channel=channel_id,
+            user=user_id,
+            text=f"You're already a member of this channel."
+        )
+    except SlackApiError as e:
+        if e.response["error"] == "already_in_channel":
+            print("Bot is already in the channel.")
+        else:
+            print(f"Error joining channel: {e.response['error']}")
+
+
+async def handle_info_command(channel_id, user_id, text):
+    response = generate_response(text)
+    try:
+        client.chat_postEphemeral(channel=channel_id, user=user_id, text=response)
+    except SlackApiError as e:
+        print(f"Error posting ephemeral message: {e.response['error']}")
